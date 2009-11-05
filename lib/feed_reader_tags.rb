@@ -15,6 +15,7 @@ module FeedReaderTags
     element_tag = tag.attr['name']
     alias_element_as = tag['as']
     Feedzirra::Feed.add_common_feed_entry_element(element_tag, :as => alias_element_as)
+    nil
   end
   
 
@@ -118,7 +119,7 @@ module FeedReaderTags
   
   tag "feed:entries:each:custom_element" do |tag|
     element_name = tag.attr['name']
-    tag.locals.entry.custom_attr
+    tag.locals.entry.send(element_name.to_sym)
   end
 
   desc %{
