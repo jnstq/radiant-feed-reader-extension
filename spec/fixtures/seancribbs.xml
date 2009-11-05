@@ -21,6 +21,7 @@
 
     
     <entry>
+      <custom_attr>custom_attr_value</custom_attr>
       <author><name>Sean Cribbs</name></author>
       <published>2009-02-26T02:30:46Z</published>
       <updated>2009-02-26T02:30:46Z</updated>

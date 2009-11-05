@@ -140,4 +140,19 @@ describe "FeedReaderTags" do
       @page.should render('<r:feed:entries:each url="http://seancribbs.com/atom.xml" limit="1"><r:link class="foo">This is a link</r:link></r:feed:entries:each>').as('<a href="http://seancribbs.com/tech/2009/02/26/nominate-your-ruby-hero/" class="foo">This is a link</a>')
     end
   end
+  
+  describe "<r:feed:custom_element>" do
+    it "should add custom feed entry element" do
+      @page.should render('<r:feed:custom_element name="xml_name" as="my_alias_name"/>')
+      Feedzirra::Parser::RSSEntry.instance_methods.should include('my_alias_name')
+    end
+    
+    it "should return custom feed entry element" do
+      @page.should render('<r:feed:custom_element name="custom_attr"/>')
+      feed = Feedzirra::Feed.parse(File.read(File.dirname(__FILE__) + "/../fixtures/seancribbs.xml"))
+      FeedCache.should_receive(:get).with('http://seancribbs.com/atom.xml').and_return(feed)      
+      @page.should render('<r:feed:entries:each url="http://seancribbs.com/atom.xml" limit="1"><r:custom_element name="custom_attr"/></r:feed:entries:each>').as(%q[custom_attr_value])
+    end
+  end
+    
 end

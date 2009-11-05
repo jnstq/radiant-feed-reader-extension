@@ -2,6 +2,21 @@ require 'feedzirra'
 
 module FeedReaderTags
   include Radiant::Taggable
+  
+  desc %{
+    Adds custom parsing to the feed entry classes.
+    Say you want the wfw:comments fields in an entry.
+    
+    *Usage:*
+     
+    <r:feed:custom_element name="wfw:commentRss" as="comment_rss"/>
+  }
+  tag "feed:custom_element" do |tag|
+    element_tag = tag.attr['name']
+    alias_element_as = tag['as']
+    Feedzirra::Feed.add_common_feed_entry_element(element_tag, :as => alias_element_as)
+  end
+  
 
   desc %{
     The root of the feed namespace.  Can take the 'url' attribute
@@ -89,6 +104,21 @@ module FeedReaderTags
   tag "feed:entries:each:date" do |tag|
     format = tag.attr['format'] || "%c"
     tag.locals.entry.published.strftime(format)
+  end
+  
+  desc %{
+    Outputs an custom element that was previously defined with <r:feed:custom_element/>
+    
+    *Usage*
+    
+    <pre><code><r:feed:entries:each url="http://somefeed.com/rss">
+      <r:custom_element name="attr_name" />
+    </r:feed:entries:each></code></pre>
+  }
+  
+  tag "feed:entries:each:custom_element" do |tag|
+    element_name = tag.attr['name']
+    tag.locals.entry.custom_attr
   end
 
   desc %{
